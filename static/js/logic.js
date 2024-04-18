@@ -1,16 +1,21 @@
+//constant variable for the query URL
 const queryUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson";
 
+// createing myMap
 const myMap = L.map("map", { center: [36.966428, -95.844032], zoom: 2 });
 
+//adding tile layer to the map 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(myMap);
 
+//fetch json data from the url and create markers and adds legend
 d3.json(queryUrl).then(data => {
     createMarkers(data.features);
     addLegend();
 });
 
+//this function create markers and adds popups
 function createMarkers(earthquakeData) {
     earthquakeData.forEach(earthquake => {
         const markerSize = earthquake.properties.mag * 5;
@@ -35,6 +40,7 @@ function createMarkers(earthquakeData) {
     });
 }
 
+//this function returns the color based on the depth
 function getColor(depth) {
   return depth < 10 ? '#7FFF00' : 
          depth < 30 ? '#32CD32' : 
@@ -45,7 +51,7 @@ function getColor(depth) {
 }
 
 
-
+//function to add legend
 function addLegend() {
   let legend = L.control({ position: 'bottomright' });
   legend.onAdd = () => {
